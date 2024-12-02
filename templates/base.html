@@ -1,11 +1,229 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Vibe Vault</title>
+	{% block extra_css%}
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
+		integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+	<link rel="stylesheet" href="{% static 'css/main.css' %}">
+	{% endblock %}
+
+	{% block onload_js%}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.min.js"
+		integrity="sha512-ykZ1QQr0Jy/4ZkvKuqWn4iF3lqPZyij9iRv6sGqLRdTPkY69YX6+7wvVGmsdBbiIfN/8OdsI7HABjvEok6ZopQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	{% endblock %}
+	<style>
+		:root {
+			/* Light theme variables */
+			--primary-color: #4A90E2;
+			--secondary-color: #34495E;
+			--background-color: #FFFFFF;
+			--text-color: #2C3E50;
+			--overlay-light: rgba(255, 255, 255, 0.85);
+			--overlay-dark: rgba(0, 0, 0, 0.5);
+			--nav-bg: rgba(33, 37, 41, 0.95);
+			--cta-bg: rgba(255, 255, 255, 0.2);
+			--cta-hover-bg: rgba(255, 255, 255, 0.3);
+			--toast-bg: rgba(255, 255, 255, 0.95);
+		}
+
+		[data-bs-theme="dark"] {
+			--primary-color: #64B5F6;
+			--secondary-color: #B0BEC5;
+			--background-color: #121212;
+			--text-color: #ECEFF1;
+			--overlay-light: rgba(18, 18, 18, 0.85);
+			--overlay-dark: rgba(0, 0, 0, 0.7);
+			--nav-bg: rgba(18, 18, 18, 0.95);
+			--cta-bg: rgba(0, 0, 0, 0.2);
+			--cta-hover-bg: rgba(0, 0, 0, 0.3);
+			--toast-bg: rgba(18, 18, 18, 0.95);
+		}
+
+		/* Skip Link */
+		.skip-link {
+			position: absolute;
+			top: -40px;
+			left: 0;
+			background: var(--primary-color);
+			color: white;
+			padding: 8px;
+			z-index: 9999;
+			transition: top 0.3s;
+		}
+
+		.skip-link:focus {
+			top: 0;
+		}
+
+		/* Navbar Styles */
+		.navbar {
+			background: var(--nav-bg);
+			transition: all 0.3s ease;
+		}
+
+		.search-container {
+			position: relative;
+			min-width: 200px;
+		}
+
+		.search-input {
+			background: transparent;
+			border: 1px solid var(--secondary-color);
+			color: var(--text-color);
+			padding-left: 2.5rem;
+			transition: all 0.3s ease;
+		}
+
+		.search-icon {
+			position: absolute;
+			left: 10px;
+			top: 50%;
+			transform: translateY(-50%);
+			color: var(--text-color);
+		}
+
+		.filter-dropdown {
+			max-height: 300px;
+			overflow-y: auto;
+		}
+
+		/* Carousel Styles */
+		.carousel-container {
+			position: relative;
+			height: 100vh;
+			overflow: hidden;
+		}
+
+		.carousel-item {
+			height: 100vh;
+		}
+
+		.carousel-item img {
+			object-fit: cover;
+			height: 100%;
+			width: 100%;
+		}
+
+		.carousel-gradient {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: linear-gradient(rgba(0, 0, 0, 0.3),
+					rgba(0, 0, 0, 0.5));
+			pointer-events: none;
+		}
+
+		.carousel-caption {
+			bottom: 50%;
+			transform: translateY(50%);
+			background: var(--overlay-dark);
+			padding: 2rem;
+			border-radius: 10px;
+			max-width: 800px;
+			margin: 0 auto;
+		}
+
+		.carousel-caption h1 {
+			font-size: 3.5rem;
+			font-weight: 700;
+			text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+			margin-bottom: 1.5rem;
+		}
+
+		.carousel-caption p {
+			font-size: 1.25rem;
+			margin-bottom: 2rem;
+			line-height: 1.6;
+		}
+
+		.carousel-cta {
+			background: var(--cta-bg);
+			border: 2px solid white;
+			color: white;
+			padding: 1rem 2rem;
+			font-size: 1.2rem;
+			border-radius: 50px;
+			transition: all 0.3s ease;
+		}
+
+		.carousel-cta:hover {
+			background: var(--cta-hover-bg);
+			transform: translateY(-2px);
+		}
+
+		.carousel-control-prev,
+		.carousel-control-next {
+			width: 50px;
+			height: 50px;
+			background: var(--overlay-dark);
+			border-radius: 50%;
+			margin: 0 2rem;
+			opacity: 0.7;
+			transition: all 0.3s ease;
+			/* Add these lines to center vertically */
+			top: 50%;
+			transform: translateY(-50%);
+		}
+
+		.carousel-control-prev:hover,
+		.carousel-control-next:hover {
+			opacity: 1;
+			background: var(--overlay-dark);
+		}
+
+		/* Toast Notifications */
+		.toast-container {
+			position: fixed;
+			bottom: 20px;
+			right: 20px;
+			z-index: 1060;
+		}
+
+		.custom-toast {
+			background: var(--toast-bg);
+			color: var(--text-color);
+		}
+
+		/* Responsive Adjustments */
+		@media (max-width: 768px) {
+			.carousel-caption h1 {
+				font-size: 2rem;
+			}
+
+			.carousel-caption p {
+				font-size: 1rem;
+			}
+
+			.carousel-control-prev,
+			.carousel-control-next {
+				margin: 0 1rem;
+			}
+		}
+	</style>
+	<title>Vibe Vault - Find Your Next Adventure</title>
+
 </head>
+
 <body>
-	<h1>Welcome to the Vibe Vault</h1>
+	{% include "includes/header.html" %}
+	{% block content %}{% endblock %}
+	{% include "includes/footer.html" %}
+
+	{% block extra_js%}
+	{% endblock %}
+
+	{% block js %}{% endblock %}
 </body>
+
 </html>
